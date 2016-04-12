@@ -1,28 +1,45 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
+.controller('DashCtrl', function ($scope,$rootScope) {
 
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+	document.addEventListener("deviceready", function () {
+		cordova.plugins.backgroundMode.setDefaults({
+			text: 'Keeping Watch On JustDial SMS.'
+		});
+		// Enable background mode
+		cordova.plugins.backgroundMode.enable();
+		// Called when background mode has been activated
+		cordova.plugins.backgroundMode.onactivate = function () {
+			setTimeout(function () {
+				// Modify the currently displayed notification
+				cordova.plugins.backgroundMode.configure({
+					text: 'Miraihealth SMS Watcher !!!!'
+				});
+			}, 2000);
+		}
+		initApp();
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
-})
+	}, false);
+	
+		$rootScope.list = [];
+		function initApp() {
+			if (!SMS) {
+				alert('SMS plugin not ready');
+				return;
+			}
+			if (SMS) SMS.startWatch(function () {
+				$rootScope.list.push('JustDial SMS Watch started');
+			}, function () {
+				$rootScope.list.push('Failed to Start JustDial SMS Watch ');
+			});
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
-
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
+			document.addEventListener('onSMSArrive', function (e) {
+				var data = e.data;
+				console.log(e);
+				$rootScope.list.push('From => ' + data.address + ' Message Body => ' + JSON.stringify(data.body));
+				$rootScope.$apply();
+			});
+		}
+	
+	
 });

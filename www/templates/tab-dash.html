@@ -1,7 +1,7 @@
 <ion-view view-title="Status">
   <ion-content class="padding">
     <div id='status'></div><hr/>
-      <div ng-repeat="msg in list">
+      <div ng-repeat="msg in list track by $index">
 	  	{{msg}} <br/>
 	  </div>
   </ion-content>

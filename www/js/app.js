@@ -16,33 +16,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       cordova.plugins.Keyboard.disableScroll(true);
 
     }
-	  
-	  
-	  
-	  
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
 	  
-	  $rootScope.list=[];
-	  var smsList = [];
-        var interceptEnabled = false;
-        function initApp() {
-        	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
-			if(SMS) SMS.startWatch(function(){
-				 $rootScope.list.push( 'watching started' );
-        	}, function(){
-				 $rootScope.list.push('failed to start watching' );
-        	});
-			
-            document.addEventListener('onSMSArrive', function(e){
-            	var data = e.data;
-            	 $rootScope.list.push('From => ' + data.address  + ' Message Body => ' + JSON.stringify(data.body));
-				$rootScope.$apply();
-            });
-        }
-	  initApp();
 	  
   });
 })
@@ -74,34 +52,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
-        }
-      }
-    })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
-
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
-    }
-  });
+  
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/dash');
